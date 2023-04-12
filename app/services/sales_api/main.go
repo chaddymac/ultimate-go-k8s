@@ -9,6 +9,8 @@ import (
 	"go.uber.org/zap"
 )
 
+var build = "develop"
+
 func main() {
 	log, err := logger.New("sales-api")
 	if err != nil {
