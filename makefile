@@ -30,6 +30,7 @@ sales:
 
 KIND_CLUSTER := chaddymac-starter-cluster
 
+
 dev-up:
 	kind create cluster \
 		--image kindest/node:v1.25.3@sha256:f52781bc0d7a19fb6c405c2af83abfeb311f130707a0e219175677e366cc45d1 \
@@ -41,3 +42,29 @@ dev-status:
 	kubectl get nodes -o wide
 	kubectl get svc -o wide
 	kubectl get pods -o wide --watch --all-namespaces
+
+dev-restart:
+	kubectl rollout restart deployment sales --namespace=sales-system
+
+dev-load:
+	kind load docker-image sales-api:$(VERSION) --name $(KIND_CLUSTER)
+
+dev-apply:
+	kustomize build zarf/k8s/dev/sales | kubectl apply -f -
+	kubectl wait --timeout=120s --namespace=sales-system --for=condition=Available deployment/sales
+
+dev-restart:
+	kubectl rollout restart deployment sales --namespace=sales-system
+
+dev-logs:
+	kubectl logs --namespace=sales-system -l app=sales --all-containers=true -f --tail=100 --max-log-requests=6
+
+dev-describe:
+	kubectl describe nodes
+	kubectl describe svc
+
+dev-describe-deployment:
+	kubectl describe deployment --namespace=sales-system sales
+
+dev-describe-sales:
+	kubectl describe pod --namespace=sales-system -l app=sales
