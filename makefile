@@ -53,9 +53,6 @@ dev-apply:
 	kustomize build zarf/k8s/dev/sales | kubectl apply -f -
 	kubectl wait --timeout=120s --namespace=sales-system --for=condition=Available deployment/sales
 
-dev-restart:
-	kubectl rollout restart deployment sales --namespace=sales-system
-
 dev-logs:
 	kubectl logs --namespace=sales-system -l app=sales --all-containers=true -f --tail=100 --max-log-requests=6
 
