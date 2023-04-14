@@ -9,7 +9,7 @@ import (
 	"go.uber.org/zap"
 )
 
-var build = "develop"
+// var build = "develop"
 
 func main() {
 	log, err := logger.New("sales-api")
